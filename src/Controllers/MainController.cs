@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Net;
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,13 @@ namespace src.Controllers
 {
     [ApiController]
     [Route("/")]
-    public class MainController : Controller
+    public class MainController : ControllerBase
     {
         private readonly ILogger<MainController> _logger;
-        private readonly IWebHostEnvironment _env;
 
-        public MainController(ILogger<MainController> logger, IWebHostEnvironment env)
+        public MainController(ILogger<MainController> logger)
         {
             _logger = logger;
-            _env = env;
         }
 
         /// <summary>
@@ -28,17 +27,18 @@ namespace src.Controllers
         /// </summary>
         /// <returns>"Hello, world"</returns>
         [HttpGet("/")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces("text/plain")]
-        public async Task<string> GetAsync() =>
-            await Task.Run(() => "Hello, world.");
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<string> Get() => "Hello, world.";
 
         /// <summary>
         /// return environment variables for "/envs".
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/envs")]
-        public async Task<ActionResult> GetEnvsAsync()
+        [HttpGet("envs")]
+        [Produces("text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult Envs()
         {
             var envDic = Environment.GetEnvironmentVariables();
             var sortedEnvList = new SortedList(envDic);
@@ -47,9 +47,23 @@ namespace src.Controllers
             {
                 envs += $"{e.Key}:{e.Value}{Environment.NewLine}";
             }
-            return await Task.Run(() => Ok(sortedEnvList));
-            // return await Task.Run(() => Ok(envs));
-            // return await Task.Run(() => Json(sortedEnvList));
+            return Ok(envs);
         }
+
+        [HttpGet("headers")]
+        [Produces("text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult Headers()
+        {
+            var sortedHeaders = HttpContext.Request.Headers
+                .OrderBy(e => e.Key)
+                .Select(e => $"{e.Key}:{e.Value}");
+            return Ok(String.Join(Environment.NewLine, sortedHeaders));
+        }
+
+        [HttpGet("echo")]
+        [Produces("text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult Echo() => Ok(HttpContext.Request.QueryString.Value);
     }
 }
