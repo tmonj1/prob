@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Prob
@@ -93,15 +94,15 @@ namespace Prob
             _version = assembly.GetName().Version.ToString();
 
             // assembly file version
-            var fileVer = (assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))
-                as AssemblyFileVersionAttribute);
-            if (fileVer != null)
+            if ((assembly.GetCustomAttribute(typeof(AssemblyFileVersionAttribute))
+                is AssemblyFileVersionAttribute fileVer))
             {
                 _fileVersion = fileVer.Version;
             }
             else
             {
-                _fileVersion = "not available";
+                // should not come here
+                Debug.Assert(false);
             }
 
             // assembly informatinal version (= semantic version)
@@ -118,7 +119,7 @@ namespace Prob
             else
             {
                 // should not come here
-                _informationalVersion = "not available";
+                Debug.Assert(false);
             }
         }
     }

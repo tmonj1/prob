@@ -1,0 +1,11 @@
+[ReportGenerator]
+  reports=testresults/**/coverage.cobertura.xml
+  reporttype = HtmlChart
+  reporttype = Html
+  reporttype = Badges
+  reporttype = PngChart
+  targetdir = coverage/report
+  historydir = coverage/history
+  classfilters = -HowToUseXUnit.Program
+  title = Unit Test 2 
+  verbosity = Verbose
