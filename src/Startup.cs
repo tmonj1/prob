@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System;
 using System.IO;
 using System.Reflection;
@@ -20,9 +21,12 @@ namespace Prob
     {
         public IConfiguration Configuration { get; }
 
+        private readonly ApplicationVersionInfo _versionInfo;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _versionInfo = Assembly.GetExecutingAssembly().GetApplicationVersionInfo();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,20 +34,27 @@ namespace Prob
         {
             services.AddControllers();
 
-            var versionInfo = Assembly.GetExecutingAssembly().GetApplicationVersionInfo();
-
             // Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                // version 0.1.0 (= Current Semantic Version)
+                c.SwaggerDoc($"v{_versionInfo.SemanticVersion}", new OpenApiInfo
                 {
-                    Title = $"{versionInfo.Name} API",
-                    Version = $"{versionInfo.SemanticVersion}",
+                    Title = $"{_versionInfo.Name} API - v{_versionInfo.SemanticVersion}",
+                    Version = $"{_versionInfo.SemanticVersion}",
                     Description = "A test container for probing the runtime environment."
                 });
 
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{versionInfo.Name}.xml";
+                // version 0.2.0
+                c.SwaggerDoc("v0.2.0", new OpenApiInfo
+                {
+                    Title = $"{_versionInfo.Name} API - v0.2.0",
+                    Version = "0.2.0",
+                    Description = "A test container for probing the runtime environment (v0.2.0)."
+                });
+
+                // provide swashbuckle with XML document comment.
+                var xmlFile = $"{_versionInfo.Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
@@ -63,7 +74,8 @@ namespace Prob
                 // specifying the Swagger JSON endpoint.
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Prob API");
+                    c.SwaggerEndpoint($"/swagger/v{_versionInfo.SemanticVersion}/swagger.json", $"Prob API - v{_versionInfo.SemanticVersion}");
+                    c.SwaggerEndpoint($"/swagger/v0.2.0/swagger.json", "Prob API - v0.2.0");
                 });
             }
 

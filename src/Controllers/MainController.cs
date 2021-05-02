@@ -32,7 +32,7 @@ namespace src.Controllers
         public ActionResult<string> Get() => "Hello, world.";
 
         /// <summary>
-        /// return environment variables for "/envs".
+        /// returns environment variables for "/envs".
         /// </summary>
         /// <returns></returns>
         [HttpGet("envs")]
@@ -50,6 +50,10 @@ namespace src.Controllers
             return Ok(envs);
         }
 
+        /// <summary>
+        /// returns all request headers.
+        /// </summary>
+        /// <returns>request headers</returns>
         [HttpGet("headers")]
         [Produces("text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -61,9 +65,14 @@ namespace src.Controllers
             return Ok(String.Join(Environment.NewLine, sortedHeaders));
         }
 
+        /// <summary>
+        /// echoes back query string part of the request.
+        /// </summary>
+        /// <returns>query string</returns>
         [HttpGet("echo")]
         [Produces("text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ApiExplorerSettings(GroupName = "v0.2.0")]
         public ActionResult Echo() => Ok(HttpContext.Request.QueryString.Value);
     }
 }
