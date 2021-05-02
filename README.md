@@ -4,6 +4,14 @@ A test container for probing the runtime environment.
 
 ---
 
+## Usage
+
+```bash
+$ cd src
+$ cp ~/.aspnet/https/aspnetapp.pfx .
+$ docker-compose up -d
+```
+
 ## APIs
 
 |Path|Content Type|Description|
