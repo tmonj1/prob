@@ -33,7 +33,19 @@ COPY aspnetapp.pfx /https/aspnetapp.pfx
 WORKDIR /app
 COPY --from=build /app ./
 
+# add a user/group for running kestrel.
+RUN addgroup --system --gid 1000 appgroup \
+    && adduser --system --uid 1000 --ingroup appgroup --shell /bin/sh appuser
+
+# publish 8080 for HTTP, 8081 for HTTPS
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_URLS=https://+:8081;http://+:8080
+ENV ASPNETCORE_HTTPS_PORT=8081
+EXPOSE 8080
+EXPOSE 8081
+
+# set executing user
+USER 1000
+
 # run
-EXPOSE 80
-EXPOSE 443
 ENTRYPOINT dotnet $APP_DLL
