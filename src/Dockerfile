@@ -32,4 +32,8 @@ COPY aspnetapp.pfx /https/aspnetapp.pfx
 # copy all published files
 WORKDIR /app
 COPY --from=build /app ./
+
+# run
+EXPOSE 80
+EXPOSE 443
 ENTRYPOINT dotnet $APP_DLL
