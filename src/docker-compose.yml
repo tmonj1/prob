@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       args:
         - app=Prob.dll
-    image: prob:0.2
+    image: ${APP_TAG}
     ports:
       - 8090:8080
       - 8091:8081
