@@ -9,7 +9,12 @@ A test container for probing the runtime environment.
 ```bash
 $ cd src
 $ cp ~/.aspnet/https/aspnetapp.pfx .
+
+# for local dev environment (use local image)
 $ docker-compose up -d
+
+# for Jenkins CI envionment (use ECR image)
+$ APP_TAG=${AWS_ECR_URL}/`cat .env|grep APP_TAG|sed -e 's/APP_TAG=//'` docker-compose up -d
 ```
 
 ## APIs
