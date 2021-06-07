@@ -74,5 +74,15 @@ namespace src.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ApiExplorerSettings(GroupName = "v0.2.0")]
         public ActionResult Echo() => Ok(HttpContext.Request.QueryString.Value);
+        [HttpGet("cookies")]
+        [Produces("text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ApiExplorerSettings(GroupName = "v0.2.0")]
+        public ActionResult Cookie() => Ok(
+            String.Join(
+                Environment.NewLine,
+                HttpContext.Request.Cookies.OrderBy(e => e.Key).Select(e => $"{e.Key}:{e.Value}")
+            )
+        );
     }
 }
