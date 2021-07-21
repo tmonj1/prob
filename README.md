@@ -19,29 +19,22 @@ $ APP_TAG=${AWS_ECR_URL}/`cat .env|grep APP_TAG|sed -e 's/APP_TAG=//'` docker-co
 
 ## APIs
 
-|Path|Content Type|Description|
-|:--|:--|:--|
-|/|text/plain|"Hello, world"|
-|/envs||shows all environment variables|
-|/headers||shows all request headers|
-|/cookies||shows all cookies|
-|/body||shows contents of body|
-|/upload|||
-|/download|||
-|/echo||returns the query string part of the request|
-|/history||returns request history|
-|/bin||executes an arbitrary command and returns the result|
-
-.text/.json
-
-## Access Logs
-
+|Path|Description|
+|:--|:--|
+|/|"Hello, world"|
+|/envs|shows all environment variables|
+|/headers|shows all request headers|
+|/cookies|shows all cookies|
+|/echo|returns the query string part of the request|
+|/redirect|redirect to url specified by query string|
+|/history|returns request history|
+|/bin|executes an arbitrary command and returns the result|
 
 ## Todos
 
+* act as fake RP
 * echo to serilog / cloudwatch
-* request recording (at least emit logs)
-* can specify port numbers (80 and 443 by default, but can change them)
+* request recording
 * accept all requests and record them.
 
 

@@ -74,6 +74,7 @@ namespace src.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ApiExplorerSettings(GroupName = "v0.2.0")]
         public ActionResult Echo() => Ok(HttpContext.Request.QueryString.Value);
+
         [HttpGet("cookies")]
         [Produces("text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -84,5 +85,13 @@ namespace src.Controllers
                 HttpContext.Request.Cookies.OrderBy(e => e.Key).Select(e => $"{e.Key}:{e.Value}")
             )
         );
+
+        [HttpGet("redirect")]
+        [ProducesResponseType(StatusCodes.Status302Found)]
+        [ApiExplorerSettings(GroupName = "v0.2.0")]
+        public ActionResult RedirectTo([FromQuery] string url)
+        {
+            return Redirect(url);
+        }
     }
 }
