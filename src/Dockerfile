@@ -37,20 +37,22 @@ COPY --from=build /app ./
 RUN addgroup --system --gid 1000 appgroup \
     && adduser --system --uid 1000 --ingroup appgroup --shell /bin/sh appuser
 
-# install basic tools
+# install basic tools (curl, dig, ping)
 RUN apt-get update && \
     apt-get install -y sudo && \
     echo 'appuser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    apt-get install -y curl
+    apt-get install -y curl && \
+    apt-get install -y dnsutils && \
+    apt-get install -y iputils-ping
 
-# publish 8080 for HTTP, 8081 for HTTPS
-ENV ASPNETCORE_URLS=https://+:8081;http://+:8080
+# publish 80 for HTTP, 443 for HTTPS
+ENV ASPNETCORE_URLS=https://+:443;http://+:80
 
 # let ASP.NET know the (external) HTTPS port number
 ENV ASPNETCORE_HTTPS_PORT=8081
 
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 443
+EXPOSE 80
 
 # set executing user
 USER 1000

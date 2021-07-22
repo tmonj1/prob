@@ -9,9 +9,10 @@ services:
         - app=Prob.dll
     image: ${APP_TAG}
     container_name: prob
+    hostname: prob
     ports:
-      - 8090:8080
-      - 8091:8081
+      - 8090:80
+      - 8091:443
     env_file:
       - .env
     environment:
@@ -21,5 +22,28 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     networks:
       - prob_network
+
+  webapp2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - app=Prob.dll
+    image: ${APP_TAG}
+    container_name: prob2
+    hostname: prob2
+    ports:
+      - 8190:80
+      - 8191:443
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTPS_PORT=8191
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=p@assw0rd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    networks:
+      - prob_network
+
 networks:
   prob_network:

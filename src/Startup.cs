@@ -79,7 +79,7 @@ namespace Prob
                 });
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
