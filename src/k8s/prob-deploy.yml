@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prob
+  name: prob
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prob
+  template:
+    metadata:
+      labels:
+        app: prob
+    spec:
+      containers:
+        - image: tmonj1/prob:0.3
+          imagePullPolicy: Always
+          name: prob

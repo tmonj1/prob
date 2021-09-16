@@ -21,14 +21,6 @@ RUN dotnet publish -c release -o /app --no-restore
 # use runtime base image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0.5
 
-# set executable assembly name from build arg
-ARG app
-ENV APP_DLL=$app
-
-# copy dev-certs
-RUN mkdir /https
-COPY aspnetapp.pfx /https/aspnetapp.pfx
-
 # copy all published files
 WORKDIR /app
 COPY --from=build /app ./
@@ -45,17 +37,16 @@ RUN apt-get update && \
     apt-get install -y dnsutils && \
     apt-get install -y iputils-ping
 
-# publish 80 for HTTP, 443 for HTTPS
-ENV ASPNETCORE_URLS=https://+:443;http://+:80
+# publish 80 for HTTP
+ENV ASPNETCORE_URLS=http://+:80
 
-# let ASP.NET know the (external) HTTPS port number
-ENV ASPNETCORE_HTTPS_PORT=8081
+# let ASP.NET know the (external) HTTP port number
+ENV ASPNETCORE_HTTP_PORT=80
 
-EXPOSE 443
 EXPOSE 80
 
-# set executing user
-USER 1000
+# set executing user (ERROR: cannot bind previlege ports)
+# USER 1000
 
 # run
-ENTRYPOINT dotnet $APP_DLL
+ENTRYPOINT dotnet Prob.dll
