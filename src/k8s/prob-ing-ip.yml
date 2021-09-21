@@ -9,6 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/group.name: prob-ingress
     alb.ingress.kubernetes.io/group.order: '1'
     alb.ingress.kubernetes.io/subnets: subnet-0307d33add764a362,subnet-0c7b31cabaf40f3cd,subnet-0de0078244b70c4ee
+    alb.ingress.kubernetes.io/security-groups: prob-alb-eks,eksctl-eks-worker-cluster-cluster/ControlPlaneSecurityGroup,eks-cluster-sg-eks-worker-cluster-1413759979,eksctl-eks-worker-cluster-cluster/ClusterSharedNodeSecurityGroup
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:372853230800:certificate/0a57e6c1-0569-4e16-ad82-566dc05feaa8
 spec:
   rules:
     - http:
