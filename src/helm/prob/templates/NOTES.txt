@@ -1,1 +1,6 @@
-hello - {{ .Release.Name }}
+Prob
+
+Release name: {{ .Release.Name }}
+Prob version: {{ .Chart.AppVersion | quote }}
+
+Released to {{ .Values.cluster }} environment.

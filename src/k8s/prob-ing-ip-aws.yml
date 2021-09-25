@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: prob-ing-ip
   annotations:
-  {{- if eq .Values.cluster "aws" }}
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
@@ -11,12 +10,9 @@ metadata:
     alb.ingress.kubernetes.io/group.order: '1'
     alb.ingress.kubernetes.io/subnets: subnet-0307d33add764a362,subnet-0c7b31cabaf40f3cd,subnet-0de0078244b70c4ee
     alb.ingress.kubernetes.io/security-groups: prob-alb-eks,eksctl-eks-worker-cluster-cluster/ControlPlaneSecurityGroup,eks-cluster-sg-eks-worker-cluster-1413759979,eksctl-eks-worker-cluster-cluster/ClusterSharedNodeSecurityGroup
-    external-dns.alpha.kubernetes.io/hostname: {{ .Values.global.hostname }}
+    external-dns.alpha.kubernetes.io/hostname: www.livinginatinyroom.net
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:372853230800:certificate/0a57e6c1-0569-4e16-ad82-566dc05feaa8
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:372853230800:certificate/03093a0f-0a37-4320-ac77-717181b2625f
-  {{- else if eq .Values.cluster "minikube"}}
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-  {{- end }}
 spec:
   rules:
     - http:
