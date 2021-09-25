@@ -29,9 +29,9 @@ $ APP_TAG=${AWS_ECR_URL}/`cat .env|grep APP_TAG|sed -e 's/APP_TAG=//'` docker-co
 | /headers  | shows all request headers.                                                                                                           |
 | /cookies  | shows all cookies.                                                                                                                   |
 | /echo     | returns the query string part of the request. <br>`ex: /echo?foo=bar`                                                                |
-| /ping     | execute ping. <br>`ex: /ping?host=prob`                                                                                              |
-| /dns      | execute dig command. <br>`ex: /dig?host=prob`                                                                                        |
-| /redirect | redirect to url specified by query string. <br>`ex: /redirect?url=https://prob`                                                      |
+| /ping     | executes ping. <br>`ex: /ping?host=prob`                                                                                             |
+| /dns      | executes dig command. <br>`ex: /dig?host=prob`                                                                                       |
+| /redirect | redirects to url specified by query string. <br>`ex: /redirect?url=https://prob`                                                     |
 | /bash     | executes an arbitrary command in bash and returns the result in "Content-Type: text/plain". <br>`ex: /bash?cmd=curl -k https://prob` |
 
 ## Deploy to a k8s cluster
