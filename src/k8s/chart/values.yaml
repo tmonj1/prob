@@ -1,11 +1,12 @@
 # If deployed to AWS EKS, set up ExternalDNS
-cluster: minikube   # aws | docker-desktop | kind | minikube
+cluster: docker-desktop   # aws | docker-desktop | kind | minikube
 
-# Settings for ExternalDNS (AWS only)
+# Ingress settings
+ingress:
+  enable: false  # true | false, if not true ingress is not deployed
+  port: 80
+  hostname: www.livinginatinyroom.net  # AWS only, used by ExternalDNS
+
+# ExternalDNS settings (AWS only)
 externalDns:
   namespace: external-dns
-
-# Globa settings
-global:
-  # hostname (used by ExternalDNS, AWS only)
-  hostname: www.livinginatinyroom.net

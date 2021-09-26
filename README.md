@@ -9,15 +9,16 @@ This tool is **NOT FOR PRODUCTION USE**, just for doing some research in a local
 ## Usage
 
 ```bash
-# copy your pkcs12 certificate to src folder
-$ cd src
-$ cp ~/.aspnet/https/aspnetapp.pfx .
+$ cd k8s/chart
 
-# for local dev environment (use local image)
-$ docker-compose up -d
+# install pod (deployment) and service only.
+$ helm install prob .
 
-# for CI (use ECR image)
-$ APP_TAG=${AWS_ECR_URL}/`cat .env|grep APP_TAG|sed -e 's/APP_TAG=//'` docker-compose up -d
+# install ingress, too.
+$ helm install prob . --set ingress.enable=true
+
+# install to AWS EKS cluster (set up ALB and register its public route to Route53)
+$ helm install prob . --set ingress.enable=true --set cluster=aws
 ```
 
 ## Endpoints

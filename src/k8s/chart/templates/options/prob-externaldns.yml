@@ -1,4 +1,5 @@
 {{- if eq .Values.cluster "aws" }}
+{{- if .Values.ingress.enable }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -70,4 +71,5 @@ spec:
             - --txt-owner-id=Z00038864W2A7DFDJGZ2
       securityContext:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
+{{- end }}
 {{- end }}
