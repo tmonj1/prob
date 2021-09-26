@@ -1,4 +1,0 @@
-cluster: minikube   # minikube | aws
-
-global:
-  hostname: www.livinginatinyroom.net

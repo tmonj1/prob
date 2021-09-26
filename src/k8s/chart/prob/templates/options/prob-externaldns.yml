@@ -1,7 +1,9 @@
+{{- if eq .Values.cluster "aws" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: external-dns
+  namespace: {{ .Values.externalDns.namespace }}
   # If you're using Amazon EKS with IAM Roles for Service Accounts, specify the following annotation.
   # Otherwise, you may safely omit it.
   annotations:
@@ -34,12 +36,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: external-dns
-    namespace: prob
+    namespace: {{ .Values.externalDns.namespace }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: external-dns
+  namespace: {{ .Values.externalDns.namespace }}
+---
 spec:
   strategy:
     type: Recreate
@@ -66,3 +70,4 @@ spec:
             - --txt-owner-id=Z00038864W2A7DFDJGZ2
       securityContext:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files
+{{- end }}

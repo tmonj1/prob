@@ -1,0 +1,11 @@
+# If deployed to AWS EKS, set up ExternalDNS
+cluster: minikube   # aws | docker-desktop | kind | minikube
+
+# Settings for ExternalDNS (AWS only)
+externalDns:
+  namespace: external-dns
+
+# Globa settings
+global:
+  # hostname (used by ExternalDNS, AWS only)
+  hostname: www.livinginatinyroom.net
