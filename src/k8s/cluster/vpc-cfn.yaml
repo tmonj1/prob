@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   ClusterBaseName:
     Type: String
-    Default: dx-staging
+    Default: prob
 
   TargetRegion:
     Type: String
@@ -25,20 +25,20 @@ Parameters:
     Type: String
     Default: 192.168.0.0/16
 
-  WorkerSubnet1Block:
+  Subnet1Block:
     Type: String
     Default: 192.168.50.0/24
 
-  WorkerSubnet2Block:
+  Subnet2Block:
     Type: String
     Default: 192.168.51.0/24
 
-  WorkerSubnet3Block:
+  Subnet3Block:
     Type: String
     Default: 192.168.2.0/24
 
 Resources:
-  EksWorkVPC:
+  ProbVpc:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcBlock
@@ -46,40 +46,40 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-VPC
+          Value: !Sub vpc-${ClusterBaseName}
 
-  WorkerSubnet1:
+  Subnet1:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref WorkerSubnet1Block
-      VpcId: !Ref EksWorkVPC
+      CidrBlock: !Ref Subnet1Block
+      VpcId: !Ref ProbVpc
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerSubnet1
+          Value: !Sub ${ClusterBaseName}-Subnet1
 
-  WorkerSubnet2:
+  Subnet2:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone2
-      CidrBlock: !Ref WorkerSubnet2Block
-      VpcId: !Ref EksWorkVPC
+      CidrBlock: !Ref Subnet2Block
+      VpcId: !Ref ProbVpc
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerSubnet2
+          Value: !Sub ${ClusterBaseName}-Subnet2
 
-  WorkerSubnet3:
+  Subnet3:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone3
-      CidrBlock: !Ref WorkerSubnet3Block
-      VpcId: !Ref EksWorkVPC
+      CidrBlock: !Ref Subnet3Block
+      VpcId: !Ref ProbVpc
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerSubnet3
+          Value: !Sub ${ClusterBaseName}-Subnet3
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -88,49 +88,49 @@ Resources:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref EksWorkVPC
+      VpcId: !Ref ProbVpc
 
-  WorkerSubnetRouteTable:
+  SubnetRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref EksWorkVPC
+      VpcId: !Ref ProbVpc
       Tags:
         - Key: Name
-          Value: !Sub ${ClusterBaseName}-WorkerSubnetRouteTable
+          Value: !Sub ${ClusterBaseName}-SubnetRouteTable
 
-  WorkerSubnetRoute:
+  SubnetRoute:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref WorkerSubnetRouteTable
+      RouteTableId: !Ref SubnetRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  WorkerSubnet1RouteTableAssociation:
+  Subnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref WorkerSubnet1
-      RouteTableId: !Ref WorkerSubnetRouteTable
+      SubnetId: !Ref Subnet1
+      RouteTableId: !Ref SubnetRouteTable
 
-  WorkerSubnet2RouteTableAssociation:
+  Subnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref WorkerSubnet2
-      RouteTableId: !Ref WorkerSubnetRouteTable
+      SubnetId: !Ref Subnet2
+      RouteTableId: !Ref SubnetRouteTable
 
-  WorkerSubnet3RouteTableAssociation:
+  Subnet3RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref WorkerSubnet3
-      RouteTableId: !Ref WorkerSubnetRouteTable
+      SubnetId: !Ref Subnet3
+      RouteTableId: !Ref SubnetRouteTable
 
 Outputs:
   VPC:
-    Value: !Ref EksWorkVPC
+    Value: !Ref ProbVpc
 
-  WorkerSubnets:
+  Subnets:
     Value: !Join
       - ','
-      - [!Ref WorkerSubnet1, !Ref WorkerSubnet2, !Ref WorkerSubnet3]
+      - [!Ref Subnet1, !Ref Subnet2, !Ref Subnet3]
 
   RouteTable:
-    Value: !Ref WorkerSubnetRouteTable
+    Value: !Ref SubnetRouteTable

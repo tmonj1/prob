@@ -35,19 +35,28 @@ $ helm install prob . --set ingress.enable=true --set cluster=aws
 | /redirect | redirects to url specified by query string. <br>`ex: /redirect?url=https://prob`                                                     |
 | /bash     | executes an arbitrary command in bash and returns the result in "Content-Type: text/plain". <br>`ex: /bash?cmd=curl -k https://prob` |
 
-## Deploy to a k8s cluster
-
-You need an ingress controller in you cluster to deploy and publish Prob.
-
-### local cluster (kind, minikube, Docker Desktop etc.)
-
-For a local cluster such as minikube, kind and kubernetes in Docker Desktop, use [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/). The installation guide is [here](https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps)(for kind, [here](https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx)).
-
-### AWS EKS
+### deploy to an EKS cluster
 
 For EKS, first create an EKS cluster, then install either Nginx Ingress Controller for CLB (Classic Load Balancer) / NLB (Network Load Balancer), or [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) for ALB (Application Load Balancer).
 
-### Deployment
+```
+# (1) set up a VPC and subnets for your cluster, using `vpc-cfn.yaml` as a starting CFn template
+# (2) install AWS Load Balancer Controller
+# (3) install ExernalDNS
+# (4) helm install or use `k apply -f` commands
+```
+
+### Deploy to a local k8s cluster (kind, minikube, Docker Desktop etc.)
+
+For a local cluster such as minikube, kind and kubernetes in Docker Desktop, use [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/). The installation guide is [here](https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps)(for kind, [here](https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx)).
+
+```
+# (1) create a local cluster
+# (2) install Nginx Ingress Controller
+# (3) helm install or use `k apply -f` commands
+```
+
+### Deploy using k8s manifests (not helm chart)
 
 Having installed an ingress controller, you can install Prob:
 
@@ -59,11 +68,4 @@ $ k create ns prob
 $ k prob-deploy.yml
 $ k prob-svc-ip.yml
 $ k prob-ing-ip.yml  # k prob-ing-ip-aws.yml for ALB
-```
-
-## Deploy with Helm
-
-```Bash
-# deploy Prob to "prob" namespace
-$ helm install prob src/k8s/chart --create-namespace prob
 ```

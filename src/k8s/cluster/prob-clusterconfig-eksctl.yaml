@@ -1,0 +1,89 @@
+# created with eksctl using:
+# eksctl create cluster \
+# --dry-run  \
+# --vpc-public-subnets subnet-0307d33add764a362,subnet-0c7b31cabaf40f3cd,subnet-0de0078244b70c4ee \
+# --name prob-cluster \
+# --region ap-northeast-1 \
+# --version 1.19 \
+# --nodegroup-name prob-nodegroup \
+# --node-type t2.small \
+# --nodes 1 --nodes-min 1 --nodes-max 2
+
+apiVersion: eksctl.io/v1alpha5
+iam:
+  vpcResourceControllerPolicy: true
+  withOIDC: true          # bind to IAM OIDC provier
+kind: ClusterConfig
+managedNodeGroups:
+- amiFamily: AmazonLinux2
+  desiredCapacity: 1
+  disableIMDSv1: false    # do not use IMDS v1
+  disablePodIMDS: false   # do not use IMDS at all
+  iam:
+    withAddonPolicies:
+      albIngress: true   # create IAM policy for ALB
+      appMesh: false
+      appMeshPreview: false
+      autoScaler: false
+      certManager: false
+      cloudWatch: false
+      ebs: false
+      efs: false
+      externalDNS: true   # create IAM policy for ExternalDNS
+      fsx: false
+      imageBuilder: false
+      xRay: false
+  instanceSelector: {}
+  instanceType: t2.small
+  labels:
+    alpha.eksctl.io/cluster-name: prob-cluster
+    alpha.eksctl.io/nodegroup-name: prob-nodegroup
+  maxSize: 2
+  minSize: 1
+  name: prob-nodegroup
+  privateNetworking: false
+  releaseVersion: ""
+  securityGroups:
+    withLocal: null
+    withShared: null
+  ssh:
+    allow: false
+    enableSsm: false
+    publicKeyPath: ""
+  tags:
+    alpha.eksctl.io/nodegroup-name: prob-nodegroup
+    alpha.eksctl.io/nodegroup-type: managed
+  volumeIOPS: 3000
+  volumeSize: 80
+  volumeThroughput: 125
+  volumeType: gp3
+metadata:
+  name: prob-cluster
+  region: ap-northeast-1
+  version: "1.19"
+privateCluster:
+  enabled: false
+vpc:
+  autoAllocateIPv6: false
+  cidr: 192.168.0.0/16
+  clusterEndpoints:
+    privateAccess: false  # allow API Server access from within VPC
+    publicAccess: true
+  id: vpc-023907cb9b8c0aef8
+  manageSharedNodeSecurityGroupRules: true
+  nat:
+    gateway: Single   # NAT gateway is not created when existing subnets are specified
+  subnets:
+    public:
+      ap-northeast-1a:
+        az: ap-northeast-1a
+        cidr: 192.168.0.0/24
+        id: subnet-0307d33add764a362
+      ap-northeast-1c:
+        az: ap-northeast-1c
+        cidr: 192.168.1.0/24
+        id: subnet-0c7b31cabaf40f3cd
+      ap-northeast-1d:
+        az: ap-northeast-1d
+        cidr: 192.168.2.0/24
+        id: subnet-0de0078244b70c4ee

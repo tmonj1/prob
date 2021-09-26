@@ -6,7 +6,10 @@ ingress:
   enable: false  # true | false, if not true ingress is not deployed
   port: 80
   hostname: www.livinginatinyroom.net  # AWS only, used by ExternalDNS
+  certificateArn: arn:aws:acm:ap-northeast-1:${AWS_ACCOUNT_ID}:certificate/03093a0f-0a37-4320-ac77-717181b2625f
+  securityGroups: prob-alb-eks,eksctl-prob-cluster-cluster/ControlPlaneSecurityGroup,eks-cluster-sg-prob-cluster-802524286,eksctl-prob-cluster-cluster/ClusterSharedNodeSecurityGroup
 
 # ExternalDNS settings (AWS only)
 externalDns:
   namespace: external-dns
+  roleArn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/eksctl-prob-cluster-addon-iamserviceaccount-Role1-CVEUX2VR6CQZ
