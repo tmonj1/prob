@@ -12,13 +12,15 @@ This tool is **NOT FOR PRODUCTION USE**, just for doing some research in a local
 $ cd k8s/chart
 
 # install pod (deployment) and service only.
+$ k create ns prob
 $ helm install prob .
 
 # install ingress, too.
 $ helm install prob . --set ingress.enable=true
 
 # install to AWS EKS cluster (set up ALB and register its public route to Route53)
-$ helm install prob . --set ingress.enable=true --set cluster=aws
+$ k create ns external-dns
+$ helm install prob . --set ingress.enable=true --set cluster=aws --create-namespace
 ```
 
 ## Endpoints
